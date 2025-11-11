@@ -13,7 +13,7 @@ const projects = [
   },
   {
     name: "Pathfinder Digital Character Sheet",
-    description: "PF2e-focused sheet with automation for rolls, inventory, and spells.",
+    description: "PF2e-focused digital sheet",
     url: "https://pf2e.tetsuro.ch"
   }
 ];
