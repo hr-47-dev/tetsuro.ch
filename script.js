@@ -8,7 +8,7 @@ const projects = [
   },
   {
     name: "Recipe DB",
-    description: "Structured cooking archive with search, tags, and seasonal notes.",
+    description: "Structured cooking archive",
     url: "https://cooking.tetsuro.ch"
   },
   {
