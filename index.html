@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Gallery</title>
+  <style>
+    :root {
+      --page-background: #0f172a;
+      --card-background: rgba(15, 23, 42, 0.85);
+      --card-hover: rgba(30, 41, 59, 0.95);
+      --accent: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --shadow-soft: 0 15px 40px rgba(15, 23, 42, 0.25);
+      --transition-base: 220ms ease;
+      --max-content-width: min(1080px, 90vw);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--page-background);
+      color: var(--text-primary);
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* The animated radial gradient gives a subtle sense of depth without distracting.
+       When animations are disabled (prefers-reduced-motion), this gracefully falls back
+       to a static gradient, meeting accessibility guidance. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -30%;
+      background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at 80% 15%, rgba(129, 140, 248, 0.2), transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(45, 212, 191, 0.18), transparent 55%);
+      z-index: -2;
+      animation: drift 24s linear infinite;
+      filter: blur(0);
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      50% {
+        transform: translate3d(-2%, 3%, 0) scale(1.05);
+      }
+      100% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none;
+      }
+    }
+
+    main {
+      width: 100%;
+      max-width: var(--max-content-width);
+      padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 6vw, 3rem);
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: clamp(2rem, 4vw, 3rem);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    p.lead {
+      color: var(--text-secondary);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
+      max-width: 36rem;
+      margin: 0 auto;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: clamp(1.25rem, 3vw, 1.75rem);
+    }
+
+    .project-card {
+      background: var(--card-background);
+      border-radius: 18px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-base), box-shadow var(--transition-base),
+        background var(--transition-base);
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .project-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+      pointer-events: none;
+    }
+
+    .project-card:hover,
+    .project-card:focus-visible {
+      transform: translateY(-6px);
+      background: var(--card-hover);
+      outline: none;
+    }
+
+    .project-card:hover::after,
+    .project-card:focus-visible::after {
+      opacity: 1;
+    }
+
+    .project-name {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: clamp(2.5rem, 8vw, 4rem) clamp(1.5rem, 7vw, 2.5rem);
+      }
+
+      .project-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Selected Projects</h1>
+      <p class="lead">
+        Explore a curated collection of digital experiments, tools, and creative projects. Each tile brings you to a
+        focused case study.
+      </p>
+    </header>
+
+    <section class="projects-grid" aria-label="Project navigation"></section>
+
+    <footer>
+      Crafted with focus and intention. Built to scale as new projects emerge.
+    </footer>
+  </main>
+
+  <noscript>
+    <style>
+      /* When JavaScript is unavailable, provide a readable fallback stack. */
+      .projects-grid::before {
+        content: "JavaScript is required to load the project list. Please enable it to explore the projects.";
+        display: block;
+        color: var(--text-secondary);
+      }
+    </style>
+  </noscript>
+
+  <script>
+    "use strict";
+    // The project definitions live in a simple array of objects. Extending the gallery is as
+    // straightforward as appending to this list—no HTML changes required.
+    const projects = [
+      {
+        name: "Aurora Analytics",
+        description: "Interactive dashboards for high-volume product teams.",
+        url: "https://example.com/aurora-analytics"
+      },
+      {
+        name: "Waveform Studio",
+        description: "Generative audio playground for musicians and designers.",
+        url: "https://example.com/waveform-studio"
+      },
+      {
+        name: "Lumen Library",
+        description: "A modern reader that adapts typography to daylight cycles.",
+        url: "https://example.com/lumen-library"
+      },
+      {
+        name: "Northstar CMS",
+        description: "Composable content platform with real-time collaboration.",
+        url: "https://example.com/northstar-cms"
+      },
+      {
+        name: "Atlas Cartography",
+        description: "Customizable map renderer built for data-rich storytelling.",
+        url: "https://example.com/atlas-cartography"
+      },
+      {
+        name: "Pulse Health",
+        description: "Patient-first wellness tracker with ambient notifications.",
+        url: "https://example.com/pulse-health"
+      }
+    ];
+
+    /**
+     * Render the project grid by creating semantic anchor elements.
+     * The grid is responsive thanks to CSS Grid's auto-fit behavior, so the JS simply
+     * populates content without concerning layout.
+     */
+    const gridElement = document.querySelector(".projects-grid");
+
+    if (gridElement) {
+      const fragment = document.createDocumentFragment();
+
+      projects.forEach((project) => {
+        const link = document.createElement("a");
+        link.className = "project-card";
+        link.href = project.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer"; // Prevent tab-nabbing when opening new tabs.
+        link.setAttribute("aria-label", `${project.name} – ${project.description}`);
+
+        const title = document.createElement("h2");
+        title.className = "project-name";
+        title.textContent = project.name;
+
+        const description = document.createElement("p");
+        description.className = "project-description";
+        description.textContent = project.description;
+
+        link.append(title, description);
+        fragment.appendChild(link);
+      });
+
+      gridElement.appendChild(fragment);
+    }
+  </script>
+</body>
+</html>
