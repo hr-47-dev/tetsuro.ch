@@ -3,7 +3,7 @@
 const projects = [
   {
     name: "Cyrillic Manager",
-    description: "Glyph curation and transliteration tools for Slavic type projects.",
+    description: "A tool to learn the cyrillic alphabet.",
     url: "https://cyrillic.tetsuro.ch"
   },
   {
