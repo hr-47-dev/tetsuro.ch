@@ -15,6 +15,11 @@ const projects = [
     name: "Pathfinder Digital Character Sheet",
     description: "PF2e-focused digital sheet",
     url: "https://pf2e.tetsuro.ch"
+  },
+  {
+    name: "Lightning Planner",
+    description: "A tool for the most lovely woman",
+    url: "https://lumen.tetsuro.ch"
   }
 ];
 
